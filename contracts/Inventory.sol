@@ -43,7 +43,7 @@ contract Inventory {
         returns (
             string memory,
             string memory,
-            uint256 price,
+            uint256,
             bool,
             address
         )
