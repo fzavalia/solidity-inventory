@@ -8,10 +8,10 @@ contract Inventory {
         address creator;
     }
 
-    uint256 counter = 0;
+    uint256 counter = 1;
 
     mapping(uint256 => Item) items;
-    mapping(address => mapping(uint256 => uint256)) items_by_address;
+    mapping(address => mapping(uint256 => bool)) items_by_address;
 
     event ItemCreated(uint256 _item_id, address _creator);
     event ItemTransfered(uint256 _item_id, address _from, address _to);
@@ -19,15 +19,9 @@ contract Inventory {
     function create_item(string memory _name, string memory _description)
         public
     {
-        Item memory item = items[counter];
-        item.name = _name;
-        item.description = _description;
-        item.creator = msg.sender;
-
+        _create_item(_name, _description);
         _add_item_to_address(counter, msg.sender);
-
         emit ItemCreated(counter, msg.sender);
-
         counter++;
     }
 
@@ -39,7 +33,7 @@ contract Inventory {
     }
 
     function has_item(uint256 _item_id) public view returns (bool) {
-        return items_by_address[msg.sender][_item_id] == _item_id;
+        return items_by_address[msg.sender][_item_id];
     }
 
     function get_item(uint256 _item_id)
@@ -51,15 +45,21 @@ contract Inventory {
             address
         )
     {
-        Item memory item = items[_item_id];
-        return (item.name, item.description, item.creator);
+        Item memory _item = items[_item_id];
+        return (_item.name, _item.description, _item.creator);
     }
 
-    function _add_item_to_address(uint256 _item_id, address _address)
+    function _create_item(string memory _name, string memory _description)
         private
-        view
     {
-        items_by_address[_address][_item_id] == _item_id;
+        Item storage item = items[counter];
+        item.name = _name;
+        item.description = _description;
+        item.creator = msg.sender;
+    }
+
+    function _add_item_to_address(uint256 _item_id, address _address) private {
+        items_by_address[_address][_item_id] = true;
     }
 
     function _remove_item_from_address(uint256 _item_id, address _address)
