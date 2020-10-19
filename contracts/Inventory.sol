@@ -49,6 +49,7 @@ contract Inventory {
         )
     {
         Item memory item = items[id];
+        require(item.exists, "Item must exist");
         return (
             item.name,
             item.description,
@@ -58,10 +59,8 @@ contract Inventory {
         );
     }
 
-    function buyItem(uint256 id) public {
+    function buyItem(uint256 id) public view {
         Item memory item = items[id];
-        require(item.exists);
-        address payable owner = payable(itemOwners[id]);
-        owner.transfer(item.price);
+        require(item.exists, "Item must exist");
     }
 }
