@@ -12,8 +12,8 @@ contract(Inventory, (accounts) => {
   it("should getBalance", async () => {
     const inventory = await Inventory.deployed();
     const balance = await inventory.getBalance();
-    expect(balance.toString()).to.eq("0")
-  })
+    expect(balance.toString()).to.eq("0");
+  });
 
   describe("getItem", () => {
     it("should fail if item does not exist", async () => {
@@ -30,19 +30,6 @@ contract(Inventory, (accounts) => {
       assert.equal(item.exists, true);
       assert.equal(item.owner, accounts[0]);
     });
-  });
-
-  describe("buyItem", () => {
-    it("should fail if item does not exist", async () => {
-      const inventory = await Inventory.deployed();
-      const promise = inventory.buyItem(2, { from: accounts[1] });
-      await shouldFail(promise, "Item must exist");
-    });
-
-    // it("should succeed", async () => {
-    //   const inventory = await Inventory.deployed();
-    //   await inventory.buyItem(1, { from: accounts[1] });
-    // });
   });
 });
 

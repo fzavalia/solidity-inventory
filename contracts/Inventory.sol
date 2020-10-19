@@ -1,12 +1,6 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.4.22 <0.8.0;
 
-/**
-   Create and transfer ownership of items.
-   The functions I have in mind are:
-    - createItem # Creates a new item for the user
-    - buyItem    # Requests approval from the owner of the item to purchase the item
- */
 contract Inventory {
     struct Item {
         string name;
@@ -21,6 +15,10 @@ contract Inventory {
     mapping(uint256 => address payable) itemOwners;
 
     event ItemCreated(uint256 id);
+
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
 
     function createItem(
         string memory name,
@@ -57,15 +55,5 @@ contract Inventory {
             item.exists,
             itemOwners[id]
         );
-    }
-
-    function getBalance() public view returns (uint256) {
-        return address(this).balance;
-    }
-
-    function buyItem(uint256 id) public {
-        Item memory item = items[id];
-        require(item.exists, "Item must exist");
-        itemOwners[id].transfer(1 ether);
     }
 }
