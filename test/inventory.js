@@ -26,7 +26,6 @@ contract(Inventory, (accounts) => {
       const item = await inventory.getItem(1);
       assert.equal(item.name, "name");
       assert.equal(item.description, "desc");
-      assert.equal(item.price, 1);
       assert.equal(item.exists, true);
       assert.equal(item.owner, accounts[0]);
     });
@@ -34,7 +33,7 @@ contract(Inventory, (accounts) => {
 });
 
 function createItem(inventory, account) {
-  return inventory.createItem("name", "desc", 1, { from: account });
+  return inventory.createItem("name", "desc", { from: account });
 }
 
 async function shouldFail(promise, message) {

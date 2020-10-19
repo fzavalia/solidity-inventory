@@ -5,7 +5,6 @@ contract Inventory {
     struct Item {
         string name;
         string description;
-        uint256 price;
         bool exists;
     }
 
@@ -20,15 +19,10 @@ contract Inventory {
         return address(this).balance;
     }
 
-    function createItem(
-        string memory name,
-        string memory description,
-        uint256 price
-    ) public {
+    function createItem(string memory name, string memory description) public {
         Item storage item = items[itemIdCounter];
         item.name = name;
         item.description = description;
-        item.price = price;
         item.exists = true;
         itemOwners[itemIdCounter] = msg.sender;
         emit ItemCreated(itemIdCounter);
@@ -41,19 +35,12 @@ contract Inventory {
         returns (
             string memory name,
             string memory description,
-            uint256 price,
             bool exists,
             address owner
         )
     {
         Item memory item = items[id];
         require(item.exists, "Item must exist");
-        return (
-            item.name,
-            item.description,
-            item.price,
-            item.exists,
-            itemOwners[id]
-        );
+        return (item.name, item.description, item.exists, itemOwners[id]);
     }
 }
