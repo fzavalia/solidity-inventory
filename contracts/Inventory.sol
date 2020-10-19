@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.0;
+pragma solidity >=0.4.22 <0.8.0;
 
 /**
    Create and transfer ownership of items.
@@ -18,7 +18,7 @@ contract Inventory {
     uint256 itemIdCounter = 1;
 
     mapping(uint256 => Item) items;
-    mapping(uint256 => address) itemOwners;
+    mapping(uint256 => address payable) itemOwners;
 
     event ItemCreated(uint256 id);
 
@@ -59,8 +59,9 @@ contract Inventory {
         );
     }
 
-    function buyItem(uint256 id) public view {
+    function buyItem(uint256 id) public payable {
         Item memory item = items[id];
         require(item.exists, "Item must exist");
+        itemOwners[id].transfer(1 ether);
     }
 }
