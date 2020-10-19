@@ -41,11 +41,11 @@ contract Inventory {
         public
         view
         returns (
-            string memory,
-            string memory,
-            uint256,
-            bool,
-            address
+            string memory name,
+            string memory description,
+            uint256 price,
+            bool exists,
+            address owner
         )
     {
         Item memory item = items[id];
