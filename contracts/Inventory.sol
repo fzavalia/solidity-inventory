@@ -59,7 +59,11 @@ contract Inventory {
         );
     }
 
-    function buyItem(uint256 id) public payable {
+    function getBalance() public view returns (uint256) {
+        return address(this).balance;
+    }
+
+    function buyItem(uint256 id) public {
         Item memory item = items[id];
         require(item.exists, "Item must exist");
         itemOwners[id].transfer(1 ether);
