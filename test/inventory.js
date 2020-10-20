@@ -1,5 +1,7 @@
 const Inventory = artifacts.require("Inventory");
 
+const ONE_ETH = 1e18;
+
 contract(Inventory, (accounts) => {
   it("should create item on createItem", async () => {
     const inventory = await Inventory.deployed();
@@ -30,7 +32,7 @@ contract(Inventory, (accounts) => {
 
   it("should create an order on createOrder", async () => {
     const inventory = await Inventory.deployed();
-    const args = { from: accounts[1], value: 100000 };
+    const args = { from: accounts[1], value: ONE_ETH };
     const result = await inventory.createOrder(1, args);
     const log = result.logs[0];
     assert.equal(log.event, "OrderCreated");
@@ -40,7 +42,7 @@ contract(Inventory, (accounts) => {
   it("should return the balance of the contract on getBalance", async () => {
     const inventory = await Inventory.deployed();
     const balance = await inventory.getBalance();
-    assert.equal(balance, 100000);
+    assert.equal(balance, ONE_ETH);
   });
 
   it("should fail on getOrder if the order does not exist", async () => {
@@ -52,7 +54,7 @@ contract(Inventory, (accounts) => {
     const inventory = await Inventory.deployed();
     const order = await inventory.getOrder(1);
     assert.equal(order.itemId, 1);
-    assert.equal(order.amount, 100000);
+    assert.equal(order.amount, ONE_ETH);
     assert.equal(order.issuer, accounts[1]);
   });
 
@@ -69,19 +71,19 @@ contract(Inventory, (accounts) => {
 
   it("should accept an order on acceptOrder", async () => {
     const inventory = await Inventory.deployed();
-    assert.equal(await inventory.getBalance(), 100000)
+    assert.equal(await inventory.getBalance(), ONE_ETH);
     const result = await inventory.acceptOrder(1, { from: accounts[0] });
     const log = result.logs[0];
     assert.equal(log.event, "OrderAccepted");
     assert.equal(log.args.orderId, 1);
-    assert.equal(await inventory.getBalance(), 0)
+    assert.equal(await inventory.getBalance(), 0);
     await shouldFail(inventory.getOrder(1), "Order must exist");
   });
 
   it("should fail on declineOrder if order does not exist", async () => {
     const inventory = await Inventory.deployed();
     // Required for next tests
-    const args = { from: accounts[0], value: 100000 };
+    const args = { from: accounts[0], value: ONE_ETH };
     await inventory.createOrder(1, args);
     // ---
     await shouldFail(inventory.declineOrder(3), "Order must exist");
@@ -95,12 +97,12 @@ contract(Inventory, (accounts) => {
 
   it("should decline an order on declineOrder", async () => {
     const inventory = await Inventory.deployed();
-    assert.equal(await inventory.getBalance(), 100000)
+    assert.equal(await inventory.getBalance(), ONE_ETH);
     const result = await inventory.declineOrder(2, { from: accounts[1] });
     const log = result.logs[0];
     assert.equal(log.event, "OrderDeclined");
     assert.equal(log.args.orderId, 2);
-    assert.equal(await inventory.getBalance(), 0)
+    assert.equal(await inventory.getBalance(), 0);
     await shouldFail(inventory.getOrder(2), "Order must exist");
   });
 });
