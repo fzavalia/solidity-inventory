@@ -10,12 +10,6 @@ contract(Inventory, (accounts) => {
     assert.equal(log.args.id, 1);
   });
 
-  it("should getBalance", async () => {
-    const inventory = await Inventory.deployed();
-    const balance = await inventory.getBalance();
-    expect(balance.toString()).to.eq("0");
-  });
-
   describe("getItem", () => {
     it("should fail if item does not exist", async () => {
       const inventory = await Inventory.deployed();
@@ -40,12 +34,19 @@ contract(Inventory, (accounts) => {
 
     it("should create an order", async () => {
       const inventory = await Inventory.deployed();
-      const args = { from: accounts[0], value: 10000 };
+      const args = { from: accounts[0], value: 100000 };
       const result = await inventory.createOrder(1, args);
+      console.log(result)
       const log = result.logs[0];
       assert.equal(log.event, "OrderCreated");
       assert.equal(log.args.id, 1);
     });
+  });
+
+  it("should getBalance", async () => {
+    const inventory = await Inventory.deployed();
+    const balance = await inventory.getBalance();
+    assert.equal(balance, 10000);
   });
 
   describe("getOrder", () => {
@@ -58,7 +59,7 @@ contract(Inventory, (accounts) => {
       const inventory = await Inventory.deployed();
       const order = await inventory.getOrder(1);
       assert.equal(order.itemId, 1);
-      assert.equal(order.amount, 10000);
+      assert.equal(order.amount, 100000);
     });
   });
 });

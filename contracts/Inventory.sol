@@ -53,7 +53,7 @@ contract Inventory {
         return (item.name, item.description, item.exists, itemOwners[id]);
     }
 
-    function placeOrder(uint256 id) public payable {
+    function createOrder(uint256 id) public payable {
         Item memory item = items[id];
         require(item.exists, "Item must exist");
         Order storage order = orders[orderIdCounter];
