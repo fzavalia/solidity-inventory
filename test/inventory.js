@@ -32,16 +32,16 @@ contract(Inventory, (accounts) => {
     });
   });
 
-  describe("buyItem", () => {
+  describe("createOrder", () => {
     it("should fail if item does not exist", async () => {
       const inventory = await Inventory.deployed();
-      await shouldFail(inventory.buyItem(2), "Item must exist");
+      await shouldFail(inventory.createOrder(2), "Item must exist");
     });
 
     it("should create an order", async () => {
       const inventory = await Inventory.deployed();
       const args = { from: accounts[0], value: 10000 };
-      const result = await inventory.buyItem(1, args);
+      const result = await inventory.createOrder(1, args);
       const log = result.logs[0];
       assert.equal(log.event, "OrderCreated");
       assert.equal(log.args.id, 1);
