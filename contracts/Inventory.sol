@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.7.0;
+pragma solidity >=0.4.22 <0.8.0;
 
 contract Inventory {
     struct Item {
@@ -110,7 +110,7 @@ contract Inventory {
 
         delete orders[orderId];
 
-        payable(order.issuer).transfer(order.amount);
+        address(uint160(order.issuer)).transfer(order.amount);
         emit OrderDeclined(orderId);
     }
 }
