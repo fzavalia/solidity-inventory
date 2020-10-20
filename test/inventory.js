@@ -53,6 +53,13 @@ contract(Inventory, (accounts) => {
       const inventory = await Inventory.deployed();
       await shouldFail(inventory.getOrder(2), "Order must exist");
     });
+
+    it("should succeed", async () => {
+      const inventory = await Inventory.deployed();
+      const order = await inventory.getOrder(1);
+      assert.equal(order.itemId, 1);
+      assert.equal(order.amount, 10000);
+    });
   });
 });
 
